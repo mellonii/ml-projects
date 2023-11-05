@@ -1,0 +1,49 @@
+def ans(i, j, tmp=1, path=None):
+    global count
+    global max_count
+    if path is None:
+        path = [0]*n**2
+        path[0] = m[i][j]
+    last_path = path[tmp-1]
+    is_not_ans = False
+    if i-1 >= 0 and m[i-1][j] < m[i][j] and m[i-1][j] != last_path:
+        is_not_ans = True
+        path[tmp] = m[i-1][j]
+        ans(i-1, j, tmp+1, path)
+    if i+1 < n and m[i+1][j] < m[i][j] and m[i+1][j] != last_path:
+        is_not_ans = True
+        path[tmp] = m[i+1][j]
+        ans(i+1, j, tmp+1, path)
+    if j+1 < n and m[i][j+1] < m[i][j] and m[i][j+1] != last_path:
+        is_not_ans = True
+        path[tmp] = m[i][j+1]
+        ans(i, j+1, tmp+1, path)
+    if j-1 >= 0 and m[i][j-1] < m[i][j] and m[i][j-1] != last_path:
+        is_not_ans = True
+        path[tmp] = m[i][j-1]
+        ans(i, j-1, tmp+1, path)
+    if not is_not_ans:
+        if tmp > max_count:
+            max_count = tmp
+            count = 0
+        if tmp == max_count:
+            count += 1
+        return max_count, count
+
+
+n = int(input())
+m = []
+for _ in range(n):
+    m.append(list(map(int, input().split())))
+
+count = 0
+max_count = 0
+
+for i in range(n):
+    if i in (0, n-1):
+        for j in range(n):
+            ans(i, j)
+    else:
+        ans(i, 0)
+        ans(i, n-1)
+print(f"{max_count} {count}")
